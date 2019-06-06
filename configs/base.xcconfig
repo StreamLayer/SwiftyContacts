@@ -1,0 +1,36 @@
+// Make it universal
+SUPPORTED_PLATFORMS = macosx iphonesimulator iphoneos watchos watchsimulator
+TARGET_NAME = SwiftyContacts
+CLANG_MODULES_AUTOLINK = YES
+
+VALID_ARCHS[sdk=macosx*]               = i386 x86_64
+VALID_ARCHS[sdk=iphoneos*]             = arm64 armv7 armv7s
+VALID_ARCHS[sdk=iphonesimulator*]      = i386 x86_64
+VALID_ARCHS[sdk=watchos*]              = armv7k
+VALID_ARCHS[sdk=watchsimulator*]       = i386
+
+OTHER_LDFLAGS[sdk=iphone*]  = $(inherited) -framework "Foundation" -framework "Contacts" -framework "CoreTelephony"
+OTHER_LDFLAGS[sdk=macosx*]  = $(inherited) -framework "Foundation" -framework "Contacts" -framework "CoreTelephony"
+OTHER_LDFLAGS[sdk=watchos*] = $(inherited) -framework "Foundation" -framework "Contacts"
+
+// Dynamic linking uses different default copy paths
+LD_RUNPATH_SEARCH_PATHS[sdk=macosx*] = $(inherited) '@executable_path/../Frameworks' '@loader_path/Frameworks'
+LD_RUNPATH_SEARCH_PATHS[sdk=iphone*] = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+LD_RUNPATH_SEARCH_PATHS[sdk=watch*]  = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+
+// iOS-specific default settings
+TARGETED_DEVICE_FAMILY[sdk=iphone*]           = 1,2
+TARGETED_DEVICE_FAMILY[sdk=watch*]            = 4
+
+// OSX-specific default settings
+FRAMEWORK_VERSION[sdk=macosx*]                = A
+COMBINE_HIDPI_IMAGES[sdk=macosx*]             = YES
+
+ENABLE_BITCODE[sdk=macosx*]                   = NO
+ENABLE_BITCODE[sdk=iphone*]                   = YES
+ENABLE_BITCODE[sdk=appletv*]                  = YES
+ENABLE_BITCODE[sdk=watch*]                    = YES
+
+IPHONEOS_DEPLOYMENT_TARGET = 10.0
+MACOSX_DEPLOYMENT_TARGET = 10.12
+WATCHOS_DEPLOYMENT_TARGET = 3.0

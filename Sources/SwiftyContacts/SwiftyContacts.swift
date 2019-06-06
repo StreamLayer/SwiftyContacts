@@ -33,7 +33,7 @@ public func authorizationStatus(_ requestStatus: @escaping (CNAuthorizationStatu
 ///
 /// - Parameter completionHandler: Returns Either [CNContact] or Error.
 public func fetchContacts(completionHandler: @escaping (_ result: Result<[CNContact], Error>) -> ()) {
-    
+
     let contactStore: CNContactStore = CNContactStore()
     var contacts: [CNContact] = [CNContact]()
     let fetchRequest: CNContactFetchRequest = CNContactFetchRequest(keysToFetch: [CNContactVCardSerialization.descriptorForRequiredKeys()])
@@ -54,7 +54,7 @@ public func fetchContacts(completionHandler: @escaping (_ result: Result<[CNCont
 ///   - completionHandler: Result Handler
 @available(iOS 10.0, *)
 public func fetchContacts(ContactsSortorder sortOrder: CNContactSortOrder, completionHandler: @escaping (_ result: Result<[CNContact], Error>) -> ()) {
-    
+
     let contactStore: CNContactStore = CNContactStore()
     var contacts: [CNContact] = [CNContact]()
     let fetchRequest: CNContactFetchRequest = CNContactFetchRequest(keysToFetch: [CNContactVCardSerialization.descriptorForRequiredKeys()])
@@ -74,7 +74,7 @@ public func fetchContacts(ContactsSortorder sortOrder: CNContactSortOrder, compl
 /// Fetching Contacts from phone
 /// - parameter completionHandler: Returns Either [CNContact] or Error.
 public func fetchContactsOnBackgroundThread(completionHandler: @escaping (_ result: Result<[CNContact], Error>) -> ()) {
-    
+
     DispatchQueue.global(qos: .userInitiated).async(execute: { () -> () in
         let fetchRequest: CNContactFetchRequest = CNContactFetchRequest(keysToFetch: [CNContactVCardSerialization.descriptorForRequiredKeys()])
         var contacts = [CNContact]()
@@ -96,9 +96,9 @@ public func fetchContactsOnBackgroundThread(completionHandler: @escaping (_ resu
         } catch let error as NSError {
            completionHandler(.failure(error))
         }
-        
+
     })
-    
+
 }
 
 // PRAGMA MARK: - Search Contacts -
@@ -107,7 +107,7 @@ public func fetchContactsOnBackgroundThread(completionHandler: @escaping (_ resu
 /// - parameter string: Search String.
 /// - parameter completionHandler: Returns Either [CNContact] or Error.
 public func searchContact(SearchString string: String, completionHandler: @escaping (_ result: Result<[CNContact], Error>) -> ()) {
-    
+
     let contactStore: CNContactStore = CNContactStore()
     var contacts: [CNContact] = [CNContact]()
     let predicate: NSPredicate = CNContact.predicateForContacts(matchingName: string)
@@ -124,7 +124,7 @@ public func searchContact(SearchString string: String, completionHandler: @escap
 /// - parameter identifier: A value that uniquely identifies a contact on the device.
 /// - parameter completionHandler: Returns Either CNContact or Error.
 public func getContactFromID(Identifires identifiers: [String], completionHandler: @escaping (_ result: Result<[CNContact], Error>) -> ()) {
-    
+
     let contactStore: CNContactStore = CNContactStore()
     var contacts: [CNContact] = [CNContact]()
     let predicate: NSPredicate = CNContact.predicateForContacts(withIdentifiers: identifiers)
@@ -328,7 +328,7 @@ public func removeContactFromGroup(Group group: CNGroup, Contact contact: CNCont
 /// - parameter group: The group.
 /// - parameter completionHandler: Returns Either [CNContact] or Error.
 public func fetchContactsInGorup(Group group: CNGroup, completionHandler: @escaping (_ result: Result<[CNContact], Error>) -> ()) {
-    
+
     let contactStore: CNContactStore = CNContactStore()
     var contacts: [CNContact] = [CNContact]()
     do {
@@ -345,16 +345,14 @@ public func fetchContactsInGorup(Group group: CNGroup, completionHandler: @escap
 /// - parameter group: The group.
 /// - parameter completionHandler: Returns Either [CNContact] or Error.
 public func fetchContactsInGorup2(Group group: CNGroup, completionHandler: @escaping (_ result:  Result<[CNContact], Error>) -> ()) {
-    
+
     let contactStore: CNContactStore = CNContactStore()
     let contacts: [CNContact] = [CNContact]()
     do {
         var predicate: NSPredicate!
         let allGroups: [CNGroup] = try contactStore.groups(matching: nil)
-        for item in allGroups {
-            if item.name == group.name {
-                predicate = CNContact.predicateForContactsInGroup(withIdentifier: group.identifier)
-            }
+        for item in allGroups where item.name == group.name {
+            predicate = CNContact.predicateForContactsInGroup(withIdentifier: group.identifier)
         }
         let keysToFetch: [String] = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactOrganizationNameKey, CNContactPhoneNumbersKey, CNContactUrlAddressesKey, CNContactEmailAddressesKey, CNContactPostalAddressesKey, CNContactNoteKey, CNContactImageDataKey]
         if predicate != nil {
@@ -379,7 +377,7 @@ public func fetchContactsInGorup2(Group group: CNGroup, completionHandler: @esca
 /// - parameter contacts: Array of contacts.
 /// - parameter completionHandler: Returns Either Data or Error.
 public func contactsToVCardConverter(contacts: [CNContact], completionHandler: @escaping (_ result: Result<Data, Error>) -> ()) {
-    
+
     var vcardFromContacts: Data = Data()
     do {
         try vcardFromContacts = CNContactVCardSerialization.data(with: contacts)
@@ -387,7 +385,7 @@ public func contactsToVCardConverter(contacts: [CNContact], completionHandler: @
     } catch {
         completionHandler(.failure(error))
     }
-    
+
 }
 
 
@@ -410,10 +408,10 @@ public func VCardToContactConverter(data: Data, completionHandler: @escaping (_ 
 /// - parameter contacts: Array of contacts.
 /// - parameter completionHandler: Returns Either Data or Error.
 public func archiveContacts(contacts: [CNContact], completionHandler: @escaping (_ result: Data) -> ()) {
-    
+
     let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: contacts)
     completionHandler(encodedData)
-    
+
 }
 
 /// Returns the contacts from the NSKeyedArchiver.archivedData.
@@ -447,7 +445,7 @@ public func makeCall(CNPhoneNumber: CNPhoneNumber) {
         }
         NSWorkspace.shared.open(url)
     }
-    
+
 }
 
 #elseif os(iOS)
@@ -470,7 +468,7 @@ public func isCapableToCall(completionHandler: @escaping (_ result: Bool) -> ())
         // iOS Device is not capable for making calls
         completionHandler(false)
     }
-    
+
 }
 
 /// Check if iOS Device supports sms
@@ -481,7 +479,7 @@ public func isCapableToSMS(completionHandler: @escaping (_ result: Bool) -> ()) 
     } else {
         completionHandler(false)
     }
-    
+
 }
 
 /// Convert CNPhoneNumber To digits
