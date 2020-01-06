@@ -108,3 +108,5 @@ fastlane/test_output
 iOSInjectionProject/
 
 *.framework.zip
+node_modules
+*.lock

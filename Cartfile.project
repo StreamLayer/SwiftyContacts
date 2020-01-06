@@ -1,0 +1,5 @@
+SwiftyContacts-Package:
+  project: SwiftyContacts.xcodeproj
+  sdks:
+  - iphoneos
+  - iphonesimulator
